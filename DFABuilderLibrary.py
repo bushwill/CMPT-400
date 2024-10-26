@@ -8,8 +8,7 @@ from OpenAI_Interface import *
 # response = makeRequest("A DFA that accepts 'aaa' and 'bbb'")
 def stringToDfa(input):
     # gets rid of the 'DFA ='
-    input = input.split('=')[1].strip(".  ")[0:]
-    print(input)
+    input = input.split('=')[1].strip(".  ")[1:]
     states = input[input.find("{")+1:input.find("}")].split(",")
     input = input[input.find("}")+1:]
 
@@ -51,7 +50,7 @@ def initDFA(Q, Sigma, Delta, starting_state, F):
 def main():
     testString = "DFA = {{q0, q1, q2}, {a}, {(0, a, 1), (1, a, 2)}, q0, {2, 3, 4}}."
     dfa = stringToDfa(testString)
-    # dfa.display()
+    dfa.display()
 
 if __name__ == "__main__":
     main()
