@@ -12,3 +12,10 @@ Dependencies:
     -> FAdo.fa
         -> GraphViz
     -> openai 
+
+Tasks:
+    -> Find a better system instruction for the GPT instance
+    -> Function to test DFA validity
+    -> Switch api-key to university account with payment set up
+    -> K-Fold cross validation
+    -> Generate positive examples from a regex and compare differences in represented languages between the input regex and output dfa?
