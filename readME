@@ -1,0 +1,14 @@
+Program Structure:
+
+DFABuilder_Main
+    -> DFABuilder_Library
+        -> FAdo.fa
+    -> DFABuilder_OpenAI_Interface
+        -> openai
+            -> openai api-key
+                -> openai project account
+
+Dependencies:
+    -> FAdo.fa
+        -> GraphViz
+    -> openai 

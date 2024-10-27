@@ -9,3 +9,10 @@ def makeRequest(request):
         messages=[{"role": "system", "content": "You are a strictly mathematical model that outputs DFA definitions in a consistent single line with no formatting. For example, a DFA that accepts 'a' is defined as DFA = {{q0, q1}, {a}, {(0, a, 1)}, q0, {1}}."},{"role": "user", "content": request}],
     )
     return response.choices[0].message.content
+
+def main():
+    request = "AAA or BBB"
+    print(makeRequest(request))
+
+if __name__ == "__main__":
+    main()
