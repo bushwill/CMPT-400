@@ -1,7 +1,7 @@
 import os
 import time
 
-from DFABuilder_Library import makeDFA
+from DFABuilder_MakeDFA import makeDFA
 from DFABuilder_OpenAI_Interface import makeRequest
 from FAdo.fa import DFA
 

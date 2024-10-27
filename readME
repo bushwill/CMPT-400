@@ -1,9 +1,9 @@
 Program Structure:
 
-DFABuilder_Main
-    -> DFABuilder_Library
+DFABuilder_Main.py
+    -> DFABuilder_Library.py
         -> FAdo.fa
-    -> DFABuilder_OpenAI_Interface
+    -> DFABuilder_OpenAI_Interface.py
         -> openai
             -> openai api-key
                 -> openai project account
