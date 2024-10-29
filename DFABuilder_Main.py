@@ -32,7 +32,7 @@ def DFAsFromInputFile(pathToFile, testSuiteNumber):
 
 def main():
     pathToInputFiles = "TestSuiteFiles/"
-    testSuiteNumber = 1
+    testSuiteNumber = 2
     start = time.perf_counter()
     if not(os.path.isfile(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt")):
         buildOutputFiles(pathToInputFiles, str(testSuiteNumber))
