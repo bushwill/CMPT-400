@@ -1,2 +1,2 @@
-A or AA or AAA or AAAA or AAAAA
-BB or CC or BC or CB
+A, AA, AAA, AAAA, AAAAA
+BB, CC, BC, CB

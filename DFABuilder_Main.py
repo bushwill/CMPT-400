@@ -3,6 +3,7 @@ import time
 
 from DFABuilder_MakeDFA import makeDFA
 from DFABuilder_OpenAI_Interface import makeRequest
+from DFABuilder_Display import displayDFAs
 from FAdo.fa import DFA
 
 # Makes requests to OpenAI API
@@ -32,12 +33,16 @@ def DFAsFromInputFile(pathToFile, testSuiteNumber):
 
 def main():
     pathToInputFiles = "TestSuiteFiles/"
-    testSuiteNumber = 2
+    testSuiteNumber = 1
     start = time.perf_counter()
     if not(os.path.isfile(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt")):
-        buildOutputFiles(pathToInputFiles, str(testSuiteNumber))
-        print("Built " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt\nin " + str(round(time.perf_counter() - start, 5)) + " seconds.")
-    DFAList = DFAsFromInputFile(pathToInputFiles, str(testSuiteNumber))
+        if os.path.isfile(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt"):
+            buildOutputFiles(pathToInputFiles, str(testSuiteNumber))
+            print("Built " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt\nin " + str(round(time.perf_counter() - start, 5)) + " seconds.")
+            DFAList = DFAsFromInputFile(pathToInputFiles, str(testSuiteNumber))
+            displayDFAs(DFAList)
+        else:
+            print("No file " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt exists")
     print("Elapsed time: " + str(round(time.perf_counter() - start, 5)) + " seconds.")
 
 if __name__ == "__main__":
