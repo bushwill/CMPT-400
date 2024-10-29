@@ -6,6 +6,7 @@ DFABuilder_Main.py
     -> DFABuilder_OpenAI_Interface.py
         -> openai
             -> openai api-key
+                -> APIKEY.txt (This is not on the repo, must be created with your own personal OpenAI API key)
                 -> openai project account
 
 Dependencies:
