@@ -4,7 +4,6 @@ import time
 from DFABuilder_MakeDFA import makeDFA
 from DFABuilder_OpenAI_Interface import makeRequest
 from DFABuilder_Display import displayDFAs
-from FAdo.fa import DFA
 
 # Makes requests to OpenAI API
 # Reads from TestSuite?_Inputs.txt

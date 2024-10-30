@@ -1,4 +1,5 @@
 from openai import OpenAI
+
 def makeRequest(request):
     client = OpenAI(api_key=getKey())
     response = client.chat.completions.create(
