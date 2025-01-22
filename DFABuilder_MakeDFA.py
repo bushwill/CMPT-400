@@ -1,18 +1,18 @@
-from FAdo.fa import DFA
+from FAdo.fa import *
 
 def makeDFA(stringDFA):
     stringDFA = stringDFA.split('=')[1].strip(". ")[1:-1]
     
     listStringDFA = recStringParse(stringDFA, '{', '}')
     
-    states = listStringDFA[0].split(',')
-    alphabet = listStringDFA[1].split(',')
+    states = [state.strip() for state in listStringDFA[0].split(',')]
+    alphabet = [symbol.strip() for symbol in listStringDFA[1].split(',')]
     transitions = recStringParse(listStringDFA[2], '(', ')')
     starting_state = stringDFA.split("},")[3].split(",")[0].strip()
-    final_states = [int(final_state) for final_state in listStringDFA[3].split(',')]
+    final_states = [int(final_state.strip()) for final_state in listStringDFA[3].split(',')]
     
-    for i in range(0, len(transitions)):
-        transitions[i] = transitions[i].split(',')
+    for i in range(len(transitions)):
+        transitions[i] = [item.strip() for item in transitions[i].split(',')]
 
     return initDFA(states, alphabet, transitions, starting_state, final_states)
 
@@ -39,7 +39,7 @@ def initDFA(Q, Sigma, Delta, starting_state, F):
 def main():
     testString = "DFA = {{q0, q1, q2}, {a, b}, {(0, a, 1), (1, a, 2)}, q0, {2}}."
     dfa = makeDFA(testString)
-    dfa.display()
+    print(dfa)
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@ import time
 
 from DFABuilder_MakeDFA import makeDFA
 from DFABuilder_OpenAI_Interface import makeRequest
-from DFABuilder_Display import displayDFAs
+from DFABuilder_Testing import testDFAs
 
 # Makes requests to OpenAI API
 # Reads from TestSuite?_Inputs.txt
@@ -33,16 +33,28 @@ def DFAsFromInputFile(pathToFile, testSuiteNumber):
 def main():
     pathToInputFiles = "TestSuiteFiles/"
     testSuiteNumber = 1
-    start = time.perf_counter()
     if not(os.path.isfile(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt")):
         if os.path.isfile(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt"):
+            start = time.perf_counter()
+            print("Building DFAs from " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt")
             buildOutputFiles(pathToInputFiles, str(testSuiteNumber))
             print("Built " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Outputs.txt\nin " + str(round(time.perf_counter() - start, 5)) + " seconds.")
             DFAList = DFAsFromInputFile(pathToInputFiles, str(testSuiteNumber))
-            displayDFAs(DFAList)
+            print("Elapsed time: " + str(round(time.perf_counter() - start, 5)) + " seconds.")
         else:
             print("No file " + pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt exists")
-    print("Elapsed time: " + str(round(time.perf_counter() - start, 5)) + " seconds.")
+    else :
+        DFAList = DFAsFromInputFile(pathToInputFiles, str(testSuiteNumber))
+    
+    input_file = open(pathToInputFiles + "TestSuite" + str(testSuiteNumber) + "_Inputs.txt")
+    input_list = []
+    for line in input_file:
+        input_list.append(line.strip())
+  
+    accuracy_list = testDFAs(DFAList, input_list)
+    
+    for item in accuracy_list:
+        print(item)
 
 if __name__ == "__main__":
     main()
