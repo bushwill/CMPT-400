@@ -39,7 +39,7 @@ def evaluateDFAList(DFAList, InputWordsList):
 
         # Calculate acceptance rate
         accuracy = len(accepted) / words_evaluated if words_evaluated > 0 else 0
-        acceptance_rate = str(i) + ": " + str(int(accuracy * 100)) + "% (" + str(words_evaluated) + ")"
+        acceptance_rate = str(int(accuracy * 100)) + "% (" + str(words_evaluated) + ")"
 
         # Generate a DFA that accepts the incorrectly rejected words
         rejected_dfa = makeDFAForRejectedWords(rejected_words)
