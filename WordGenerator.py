@@ -152,8 +152,8 @@ if __name__ == "__main__":
         test_cases.append(line.rstrip())
 
     output_file = open("TestSuiteFiles/TestSuite1_Inputs.txt", 'w')
-    for pattern in test_cases:
-        results = sorted(generate_cre_final(pattern, 3))
+    for regex in test_cases:
+        results = sorted(generate_cre_final(regex, 3))
         for word in results: 
             output_file.write(word + ", ")
         output_file.write("\n")
