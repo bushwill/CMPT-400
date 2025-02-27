@@ -153,7 +153,6 @@ def generate_cre_final(regex, max_repetitions=3):
 if __name__ == "__main__":
     pathToTestFiles = "TestSuiteFiles/"
     testSuiteNumber = 2
-    model = 'gpt-4o'
     
     pathToFile = pathToTestFiles + "TestSuite" + str(testSuiteNumber)
     
@@ -161,7 +160,7 @@ if __name__ == "__main__":
     for line in open(pathToFile + "_CREs.txt"):
         test_cases.append(line.rstrip())
 
-    positive_examples_file = open(pathToFile + "_" + model + "_PEs.txt", 'w')
+    positive_examples_file = open(pathToFile + "_PEs.txt", 'w')
     for regex in test_cases:
         positive_examples = sorted(generate_cre_final(regex, 3))
         dfa = str2regexp(regex).toDFA()
