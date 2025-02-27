@@ -9,7 +9,7 @@ def evaluateDFAList(DFAList, InputWordsList):
             str(DFAList[i])
             is_valid = 1  # The DFA is valid
         except:
-            evaluation_list.append([0, str(i) + ": Invalid DFA", None])
+            evaluation_list = [0]
             continue  # Skip to the next DFA if invalid
 
         dfa = DFAList[i]

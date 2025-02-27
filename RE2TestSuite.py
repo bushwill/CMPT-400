@@ -1,9 +1,6 @@
-import os
 from FAdo.reex import *
 from FAdo.conversions import *
 from FAdo.fa import *
-
-reg = str2regexp("(a+b)")
 
 def genRegExp(reg):
     if len(reg) == 1:
@@ -34,4 +31,6 @@ def findMatchingRightBracket(reg, leftBracketIndex):
             leftBrackets-=1
     return i
 
+reg = str2regexp("(a+b)*")
 print(genRegExp("aabb(a(bab)a)*"))
+print(reg.toDFA())
