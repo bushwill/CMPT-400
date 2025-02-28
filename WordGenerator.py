@@ -3,6 +3,7 @@ import itertools
 from FAdo.conversions import *
 from FAdo.reex import *
 from FAdo.fa import *
+from DFABuilder_Main import userInterfaceTestSuiteNumber
 
 class Node:
     def __init__(self, kind, children=None, value=None):
@@ -152,7 +153,7 @@ def generate_cre_final(regex, max_repetitions=3):
 
 if __name__ == "__main__":
     pathToTestFiles = "TestSuiteFiles/"
-    testSuiteNumber = 2
+    testSuiteNumber = userInterfaceTestSuiteNumber(pathToTestFiles)
     
     pathToFile = pathToTestFiles + "TestSuite" + str(testSuiteNumber)
     
@@ -167,4 +168,5 @@ if __name__ == "__main__":
         for word in positive_examples: 
             positive_examples_file.write(word + ", ")
         positive_examples_file.write("\n")
+    print("Positive example set built for test suite number " + str(testSuiteNumber))
         

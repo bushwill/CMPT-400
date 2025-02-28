@@ -29,6 +29,7 @@ def build_GPT_DFAs(pathToFile, model = "gpt-4o-mini"):
         requests.append(line.strip())
     inputFile.close()
     for request in requests:
+        print("DFA #" + str(requests.index(request)) + " requested")
         responses.append(makeRequest(request, model))
     outputFile = open(pathToFile + "_" + model + "_GPT_DFAs.txt", "w")
     for response in responses:
@@ -80,7 +81,51 @@ def constructDFAList(original_dfa_list, proposed_dfa_list):
         DFAList.append( EvaluatedDFA(original_dfa, proposed_dfa) )
     return DFAList, invalidDFAs
         
-def userInterface(DFAList, invalid_dfas = 0):
+def userInterfaceModel():
+    print("Choose a gpt model:")
+    print("[0] gpt-4o-mini")
+    print("[1] gpt-4o")
+    print("[2] o1-mini")
+    print("[3] o1-preview")
+    user_input = int(input())
+    if user_input == 0:
+        return 'gpt-4o-mini'
+    elif user_input == 1:
+        return 'gpt-4o'
+    elif user_input == 2:
+        return 'o1-mini'
+    elif user_input == 3:
+        return 'o1-preview'
+    else:
+        print("Incorrect entry")
+        # Try again
+        return userInterfaceModel()
+
+def userInterfaceTestSuiteNumber(pathToTestFiles):
+    current = 0
+    searching = True
+    while searching:
+        current += 1
+        if not(os.path.isfile(pathToTestFiles + "TestSuite" + str(current) + "_CREs.txt")):
+            searching = False
+            current -= 1
+    if current == 0:
+        print("No test suites found, exiting program...")
+        exit()
+    if current > 1:
+        print("Enter a test suite number:")
+        print("Available: 1-" + str(current))
+    else:
+        print("Only one test suite found")
+        return 1
+    user_input = int(input())
+    if user_input <= 0 or user_input > current:
+        print("Invalid selection")
+        return userInterfaceTestSuiteNumber(pathToTestFiles)
+    else:
+        return user_input
+        
+def userInterfaceDFAs(DFAList, invalid_dfas = 0):
     print("[0] to select different gpt model")
     print("Enter a DFA #")
     print("[index starting at 1]")
@@ -117,30 +162,13 @@ def userInterface(DFAList, invalid_dfas = 0):
         user_input = int(input())
     print("~~~~~~~~~~~~~~~~~~~~")
     return True
-    
-        
+         
 def main():
     on = True
     while on:
         pathToTestFiles = "TestSuiteFiles/"
-        testSuiteNumber = 2
-        print("Choose a gpt model:")
-        print("[0] gpt-4o-mini")
-        print("[1] gpt-4o")
-        print("[2] o1-mini")
-        print("[3] o1-preview")
-        user_input = int(input())
-        if user_input == 0:
-            model = 'gpt-4o-mini'
-        elif user_input == 1:
-            model = 'gpt-4o'
-        elif user_input == 2:
-            model = 'o1-mini'
-        elif user_input == 3:
-            model = 'o1-preview'
-        else:
-            print("Incorrect entry")
-            exit()
+        testSuiteNumber = userInterfaceTestSuiteNumber(pathToTestFiles)
+        model = userInterfaceModel()
         pathToFile = pathToTestFiles + "TestSuite" + str(testSuiteNumber)   
         construct_GPT_DFAs(pathToFile, model)
         original_dfa_list = DFAsFromCREs(pathToTestFiles + "TestSuite" + str(testSuiteNumber))
@@ -148,7 +176,7 @@ def main():
         DFAList, invalidDFAs = constructDFAList(original_dfa_list, proposed_dfa_list)
         selected_model = True
         while selected_model:
-            selected_model = userInterface(DFAList, invalidDFAs)
+            selected_model = userInterfaceDFAs(DFAList, invalidDFAs)
         
 
 if __name__ == "__main__":
