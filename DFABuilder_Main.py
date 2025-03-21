@@ -10,11 +10,11 @@ from FAdo.fa import *
 
 class EvaluatedDFA:
     def __init__(self, originalDFA, proposedDFA):
-        self.originalDFA = originalDFA
-        self.proposedDFA = proposedDFA
-        self.tpDFA = originalDFA.conjunction(proposedDFA)
-        self.fpDFA = proposedDFA.conjunction(~originalDFA)
-        self.fnDFA = originalDFA.conjunction(~proposedDFA)
+        self.originalDFA = originalDFA.minimalIncremental()
+        self.proposedDFA = proposedDFA.minimalIncremental()
+        self.tpDFA = originalDFA.conjunction(proposedDFA).minimalIncremental()
+        self.fpDFA = proposedDFA.conjunction(~originalDFA).minimalIncremental()
+        self.fnDFA = originalDFA.conjunction(~proposedDFA).minimalIncremental()
     def __str__(self):
         return str(self.originalDFA) + str(self.proposedDFA)
 

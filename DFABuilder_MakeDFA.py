@@ -26,14 +26,15 @@ def recStringParse(str, leftItem, rightItem):
     return [str[l+1:r]] + recStringParse(str[r+1:], leftItem, rightItem)
         
 def initDFA(Q, Sigma, Delta, starting_state, F):
-    dfa = DFA()
+    dfa = NFA()
     for state in Q:
         dfa.addState(state)
     dfa.setSigma(Sigma)
     for transition in Delta:
         dfa.addTransition(int(transition[0]), str(transition[1]), int(transition[2]))
-    dfa.setInitial(Q.index(starting_state))
+    dfa.setInitial([Q.index(starting_state)])
     dfa.setFinal(F)
+    dfa = dfa.toDFA()
     return dfa
 
 def main():
