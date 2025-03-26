@@ -3,7 +3,7 @@ import time
 
 from DFABuilder_MakeDFA import makeDFA
 from DFABuilder_OpenAI_Interface import makeRequest
-from DFABuilder_Evaluation import *
+from DFABuilder_DataDisplay import *
 from FAdo.conversions import *
 from FAdo.reex import *
 from FAdo.fa import *
@@ -12,11 +12,29 @@ class EvaluatedDFA:
     def __init__(self, originalDFA, proposedDFA):
         self.originalDFA = originalDFA.minimalIncremental()
         self.proposedDFA = proposedDFA.minimalIncremental()
-        self.tpDFA = originalDFA.conjunction(proposedDFA).minimalIncremental()
-        self.fpDFA = proposedDFA.conjunction(~originalDFA).minimalIncremental()
-        self.fnDFA = originalDFA.conjunction(~proposedDFA).minimalIncremental()
+
+        self.tpDFA = self.originalDFA.conjunction(self.proposedDFA).minimalIncremental()
+        self.fpDFA = self.proposedDFA.conjunction(~self.originalDFA).minimalIncremental()
+        self.fnDFA = self.originalDFA.conjunction(~self.proposedDFA).minimalIncremental()
+
+        self.tpDFAlen = 0 if self.tpDFA.emptyP() else len(self.tpDFA.States)
+        self.fpDFAlen = 0 if self.fpDFA.emptyP() else len(self.fpDFA.States)
+        self.fnDFAlen = 0 if self.fnDFA.emptyP() else len(self.fnDFA.States)
+
+        tp = self.tpDFAlen
+        fp = self.fpDFAlen
+        fn = self.fnDFAlen
+
+        self.precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        self.recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+
     def __str__(self):
-        return str(self.originalDFA) + str(self.proposedDFA)
+        return (
+            f"Original DFA States: {len(self.originalDFA.States)}\n"
+            f"Proposed DFA States: {len(self.proposedDFA.States)}\n"
+            f"TP States: {self.tpDFAlen}, FP States: {self.fpDFAlen}, FN States: {self.fnDFAlen}\n"
+            f"Precision: {self.precision:.3f}, Recall: {self.recall:.3f}"
+        )
 
 # Makes requests to OpenAI API
 # Reads from TestSuite?_PEs.txt
@@ -46,9 +64,10 @@ def DFAsFromGPTFile(pathToFile, model = 'gpt-4o-mini'):
 
 def DFAsFromCREs(pathToFile):
     DFAList = []
-    inputFile = open(pathToFile + "_CREs.txt", "r")
-    for line in inputFile:
-        DFAList.append(str2regexp(line.strip()).toDFA())
+    with open(pathToFile + "_CREs.txt", "r") as inputFile:
+        for line in inputFile:
+            cre = line.strip().replace("ɛ", "@epsilon")  # Manually handle epsilon
+            DFAList.append(str2regexp(cre).toDFA())
     return DFAList
 
 # Creates file of DFA definitions utilizing buildOutputFiles() if no file exists
@@ -126,7 +145,8 @@ def userInterfaceTestSuiteNumber(pathToTestFiles):
         return user_input
         
 def userInterfaceDFAs(DFAList, invalid_dfas = 0):
-    print("[0] to select different gpt model")
+    plot_precision_recall(DFAList)
+    print("[0] to select different test suite")
     print("Enter a DFA #")
     print("[index starting at 1]")
     print(str(len(DFAList)) + " DFAs available")
@@ -147,6 +167,7 @@ def userInterfaceDFAs(DFAList, invalid_dfas = 0):
     print("[3] display the true positives DFA")
     print("[4] display the false positives DFA")
     print("[5] display the false negatives DFA")
+    print("[6] display the precision and recall of DFA")
     user_input = int(input())
     while user_input != 0:
         if user_input == 1:
@@ -159,6 +180,9 @@ def userInterfaceDFAs(DFAList, invalid_dfas = 0):
             chosen_dfa.fpDFA.display()
         elif user_input == 5:
             chosen_dfa.fnDFA.display()
+        elif user_input == 6:
+            print(chosen_dfa.precision)
+            print(chosen_dfa.recall)
         user_input = int(input())
     print("~~~~~~~~~~~~~~~~~~~~")
     return True

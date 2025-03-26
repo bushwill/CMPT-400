@@ -164,7 +164,7 @@ if __name__ == "__main__":
     positive_examples_file = open(pathToFile + "_PEs.txt", 'w')
     for regex in test_cases:
         positive_examples = sorted(generate_cre_final(regex, 3))
-        dfa = str2regexp(regex).toDFA()
+        dfa = str2regexp(regex.replace("ɛ", "@epsilon")).toDFA()
         for word in positive_examples: 
             positive_examples_file.write(word + ", ")
         positive_examples_file.write("\n")
