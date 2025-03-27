@@ -40,6 +40,7 @@ class EvaluatedDFA:
 # Reads from TestSuite?_PEs.txt
 # Outputs DFA definitions to TestSuite?_GPT_DFAs.txt
 def build_GPT_DFAs(pathToFile, model = "gpt-4o-mini"):
+    n_requests = 0
     requests = []
     responses = []
     inputFile = open(pathToFile + "_PEs.txt", "r")
@@ -47,7 +48,8 @@ def build_GPT_DFAs(pathToFile, model = "gpt-4o-mini"):
         requests.append(line.strip())
     inputFile.close()
     for request in requests:
-        print("DFA #" + str(requests.index(request)) + " requested")
+        n_requests += 1
+        print("DFA #" + str(n_requests) + " requested")
         responses.append(makeRequest(request, model))
     outputFile = open(pathToFile + "_" + model + "_GPT_DFAs.txt", "w")
     for response in responses:
@@ -56,10 +58,17 @@ def build_GPT_DFAs(pathToFile, model = "gpt-4o-mini"):
 # Reads from TestSuite?_GPT_DFAs.txt
 # Returns a list of all the DFAs as FAdo DFA Objects
 def DFAsFromGPTFile(pathToFile, model = 'gpt-4o-mini'):
+    n_dfa = 0
     DFAList = []
     inputFile = open(pathToFile + "_" + model + "_GPT_DFAs.txt", "r")
     for line in inputFile:
-        DFAList.append(makeDFA(line.strip()))
+        n_dfa += 1
+        try:
+            DFAList.append(makeDFA(line.strip()))
+        except Exception as e:
+            print(e)
+            print("Error constructing DFA #" + str(n_dfa) + ", exiting program...")
+            exit()
     return DFAList
 
 def DFAsFromCREs(pathToFile):
@@ -144,9 +153,49 @@ def userInterfaceTestSuiteNumber(pathToTestFiles):
     else:
         return user_input
         
+def userInterfaceTestSuite(DFAList, invalid_dfas = 0):
+    perfect_count = 0
+    precision = []
+    recall = []
+    imperfect_precision = []
+    imperfect_recall = []
+    
+    for dfa in DFAList:
+        if dfa.precision == 1.0 and dfa.recall == 1.0:
+            perfect_count += 1
+        else:
+            imperfect_precision.append(dfa.precision)
+            imperfect_recall.append(dfa.recall)
+        precision.append(dfa.precision)
+        recall.append(dfa.recall)
+            
+    while True:
+        print("[0] to select different test suite")
+        print("[1] plot the DFA list")
+        print("[2] view metrics for the DFA list")
+        print("[3] investigate individual DFAs")
+        user_input = int(input())
+
+        if user_input == 0:
+            return False
+        elif user_input == 1:
+            plot_precision_recall(DFAList)
+        elif user_input == 2:
+            print("Perfect DFAs: " + str(perfect_count) + "/" + str(len(DFAList)))
+            print("Average Precision: " + str(round(sum(precision)/len(precision), 3)))
+            print("Average Recall: " + str(round(sum(recall)/len(recall), 3)))
+            print("Average Imperfect Precision: " + str(round(sum(imperfect_precision)/len(imperfect_precision), 3)))
+            print("Average Imperfect Recall: " + str(round(sum(imperfect_recall)/len(imperfect_recall), 3)))
+        elif user_input == 3:
+            selected_model = True
+            while selected_model:
+                selected_model = userInterfaceDFAs(DFAList, invalid_dfas)
+        else:
+            print("Invalid entry!")
+        print("~~~~~~~~~~~~~~~~~~~~")
+
 def userInterfaceDFAs(DFAList, invalid_dfas = 0):
-    plot_precision_recall(DFAList)
-    print("[0] to select different test suite")
+    print("[0] to return to test suite options")
     print("Enter a DFA #")
     print("[index starting at 1]")
     print(str(len(DFAList)) + " DFAs available")
@@ -198,9 +247,9 @@ def main():
         original_dfa_list = DFAsFromCREs(pathToTestFiles + "TestSuite" + str(testSuiteNumber))
         proposed_dfa_list = DFAsFromGPTFile(pathToFile, model)
         DFAList, invalidDFAs = constructDFAList(original_dfa_list, proposed_dfa_list)
-        selected_model = True
-        while selected_model:
-            selected_model = userInterfaceDFAs(DFAList, invalidDFAs)
+        run = userInterfaceTestSuite(DFAList, invalidDFAs)
+        while run:
+            run = userInterfaceDFAs(DFAList, invalidDFAs)
         
 
 if __name__ == "__main__":
