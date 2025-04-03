@@ -153,7 +153,7 @@ def userInterfaceTestSuiteNumber(pathToTestFiles):
     else:
         return user_input
         
-def userInterfaceTestSuite(DFAList, invalid_dfas = 0):
+def userInterfaceTestSuite(DFAList, invalid_dfas = 0, model = ""):
     perfect_count = 0
     precision = []
     recall = []
@@ -179,7 +179,7 @@ def userInterfaceTestSuite(DFAList, invalid_dfas = 0):
         if user_input == 0:
             return False
         elif user_input == 1:
-            plot_precision_recall(DFAList)
+            plot_precision_recall(DFAList, model)
         elif user_input == 2:
             print("Perfect DFAs: " + str(perfect_count) + "/" + str(len(DFAList)))
             print("Average Precision: " + str(round(sum(precision)/len(precision), 3)))
@@ -247,7 +247,7 @@ def main():
         original_dfa_list = DFAsFromCREs(pathToTestFiles + "TestSuite" + str(testSuiteNumber))
         proposed_dfa_list = DFAsFromGPTFile(pathToFile, model)
         DFAList, invalidDFAs = constructDFAList(original_dfa_list, proposed_dfa_list)
-        run = userInterfaceTestSuite(DFAList, invalidDFAs)
+        run = userInterfaceTestSuite(DFAList, invalidDFAs, model)
         while run:
             run = userInterfaceDFAs(DFAList, invalidDFAs)
         

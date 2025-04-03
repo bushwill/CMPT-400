@@ -19,7 +19,7 @@ def summarizeDFAEvaluations(DFAList):
     df = pd.DataFrame(data)
     return df
 
-def plot_precision_recall(DFAList):
+def plot_precision_recall(DFAList, model):
     df = summarizeDFAEvaluations(DFAList)
     indices = np.arange(len(df))
     bar_width = 0.4
@@ -44,7 +44,7 @@ def plot_precision_recall(DFAList):
 
     plt.xlabel("DFA #")
     plt.ylabel("Score")
-    plt.title("Precision and Recall per DFA")
+    plt.title(model + " State-Level Precision and State-Level Recall per DFA")
     plt.xticks(indices, df["Index"])
     plt.ylim(0, 1.05)
     plt.grid(axis='y', linestyle='--', alpha=0.7)
